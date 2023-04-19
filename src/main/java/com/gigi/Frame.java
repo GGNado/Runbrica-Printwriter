@@ -31,6 +31,10 @@ public class Frame extends JFrame {
         telefono.setBounds(cognome.getX(), cognome.getY() + 50, nome.getBounds().width, nome.getBounds().height);
         panel.add(telefono);
 
+        JTextField codiceFIscale = new JTextField("AAABBBCCCEEEDDDF");
+        codiceFIscale.setBounds(telefono.getX(), telefono.getY() + 50, nome.getBounds().width, nome.getBounds().height);
+        panel.add(codiceFIscale);
+
         //labels
         JLabel nomeLabel = new JLabel("Nome");
         nomeLabel.setBounds(nome.getX() - 100, nome.getY() + 10, nomeLabel.getPreferredSize().width, nomeLabel.getPreferredSize().height);
@@ -46,7 +50,7 @@ public class Frame extends JFrame {
 
         //Bottoni
         JButton aggiungi = new JButton("Aggiungi contatto");
-        aggiungi.setBounds(250, 200, 300, 50);
+        aggiungi.setBounds(250, 400, 300, 50);
         panel.add(aggiungi);
 
         //ActionLsitener
@@ -67,6 +71,8 @@ public class Frame extends JFrame {
                     JOptionPane.showMessageDialog(null, "Inserire Telefono", "Errore", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                Persona persona = new Persona(nome.getText(), cognome.getText(), telefono.getText(), codiceFIscale.getText());
+                persona.toDatabase();
                 System.out.println("Nome: " + nome.getText() + "\nCognome: " + cognome.getText() + "\nTelefono: " + telefono.getText());
                 JOptionPane.showMessageDialog(null, "Nome: " + nome.getText() + "\nCognome: " + cognome.getText() + "\nTelefono: " + telefono.getText(), "Aggiunto correttamente", JOptionPane.INFORMATION_MESSAGE);
 
@@ -85,6 +91,10 @@ public class Frame extends JFrame {
                     printWriter.append("\nNome: " + nome.getText() + "\nCognome: " + cognome.getText() + "\nTelefono: " + telefono.getText());
                     printWriter.flush();
                     printWriter.close();
+                    nome.setText("");
+                    codiceFIscale.setText("");
+                    telefono.setText("");
+                    cognome.setText("");
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
