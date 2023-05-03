@@ -106,10 +106,5 @@ public class Persona {
             System.out.println(ex);
             JOptionPane.showMessageDialog(null, "Errore nell'aggiunta del DataBase", "Errore", JOptionPane.ERROR_MESSAGE);
         }
-
-
-
-
-
     }
 }

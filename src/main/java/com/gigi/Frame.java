@@ -150,7 +150,6 @@ public class Frame extends JFrame {
                     System.out.println(ex);
                     JOptionPane.showMessageDialog(null, "Non puoi inserire caratteri o numero nullo");
                 }
-
             }
         });
         add(panel);

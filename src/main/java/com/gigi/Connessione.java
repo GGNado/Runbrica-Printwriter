@@ -67,9 +67,7 @@ public class Connessione {
         System.out.println(e);
     }
 
-
-        JOptionPane.showMessageDialog(null, "Utente non trovato");
-
+    JOptionPane.showMessageDialog(null, "Utente non trovato");
     }
 
 }
