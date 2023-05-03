@@ -39,15 +39,14 @@ public class Connessione {
             }
 
         }catch (SQLException ex){
-
+            System.out.println(ex);
         }
-
     }
 
     public static void findById(int id) {
         Connection connection = getConnessione();
         if (connection == null) return;
-        
+
         String sql = "select * from Rubrica";
 
     try {
