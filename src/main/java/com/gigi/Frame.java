@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.sql.Connection;
 import java.util.Scanner;
 
 public class Frame extends JFrame {
@@ -48,6 +49,10 @@ public class Frame extends JFrame {
         telefonoLabel.setBounds(telefono.getX() - 100, telefono.getY() + 10, telefonoLabel.getPreferredSize().width, telefonoLabel.getPreferredSize().height);
         panel.add(telefonoLabel);
 
+        JLabel codFiscale = new JLabel("Cod. Fiscale");
+        codFiscale.setBounds(codiceFIscale.getX() - 100, codiceFIscale.getY() + 10, codFiscale.getPreferredSize().width, codFiscale.getPreferredSize().height);
+        panel.add(codFiscale);
+
         //Bottoni
         JButton aggiungi = new JButton("Aggiungi contatto");
         aggiungi.setBounds(250, 400, 300, 50);
@@ -72,10 +77,13 @@ public class Frame extends JFrame {
                     return;
                 }
                 Persona persona = new Persona(nome.getText(), cognome.getText(), telefono.getText(), codiceFIscale.getText());
-                persona.toDatabase();
-                System.out.println("Nome: " + nome.getText() + "\nCognome: " + cognome.getText() + "\nTelefono: " + telefono.getText());
-                JOptionPane.showMessageDialog(null, "Nome: " + nome.getText() + "\nCognome: " + cognome.getText() + "\nTelefono: " + telefono.getText(), "Aggiunto correttamente", JOptionPane.INFORMATION_MESSAGE);
+                Connection connection = Connessione.getConnessione();
+                if (connection == null) return;
 
+                persona.toDatabase(connection);
+
+
+                //- - - - - - FILE - - - - - -
                 File file = new File("Contatti.txt");
                 //Se file non esiste, crealo
                 if (!file.exists()) {
@@ -122,9 +130,29 @@ public class Frame extends JFrame {
                     if (scanner != null)
                     scanner.close();
                 }
+
+                Connessione.getAll();
             }
+
         });
 
+        JButton cerca = new JButton("Cerca");
+        cerca.setBounds(visualizza.getX(), visualizza.getY() + 50, visualizza.getBounds().width, visualizza.getBounds().height);
+        panel.add(cerca);
+
+        cerca.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int i = Integer.parseInt(JOptionPane.showInputDialog(null, "Inserisci id"));
+                    Connessione.findById(i);
+                }catch (NumberFormatException ex){
+                    System.out.println(ex);
+                    JOptionPane.showMessageDialog(null, "Non puoi inserire caratteri o numero nullo");
+                }
+
+            }
+        });
         add(panel);
         setVisible(true);
     }

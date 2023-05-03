@@ -1,5 +1,6 @@
 package com.gigi;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -51,7 +52,7 @@ public class Persona {
         this.fiscale = fiscale;
     }
 
-    public void toDatabase(){
+   /* public void toDatabase(){
         String url = "jdbc:mysql://localhost:3306/Persone";
         String user = "root";
         String psw = "";
@@ -63,6 +64,7 @@ public class Persona {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url, user, psw);
 
+            
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, getNome());
@@ -73,8 +75,41 @@ public class Persona {
             preparedStatement.execute();
             connection.close();
 
+            JOptionPane.showMessageDialog(null, "Nome: " + nome+ "\nCognome: " + cognome+ "\nTelefono: " + telefono, "Aggiunto correttamente", JOptionPane.INFORMATION_MESSAGE);
         }catch (ClassNotFoundException | SQLException ex){
             System.out.println(ex);
+            JOptionPane.showMessageDialog(null, "Errore nell'aggiunta del DataBase", "Errore", JOptionPane.ERROR_MESSAGE);
         }
+    }*/
+
+    public void toDatabase(Connection connection){
+
+        if (connection == null) return;
+
+        String sql = " insert into Rubrica (nome, cognome, numero, fiscale)"
+                + " values (?, ?, ?, ?)";
+
+        try {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, getNome());
+            preparedStatement.setString(2, getCognome());
+            preparedStatement.setString(3, getTelefono());
+            preparedStatement.setString(4, getFiscale());
+
+            preparedStatement.execute();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "Nome: " + nome+ "\nCognome: " + cognome+ "\nTelefono: " + telefono, "Aggiunto correttamente", JOptionPane.INFORMATION_MESSAGE);
+        }catch (SQLException ex){
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, "Errore nell'aggiunta del DataBase", "Errore", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+
+
+
     }
 }
