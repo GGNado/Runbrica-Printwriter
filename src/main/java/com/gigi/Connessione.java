@@ -34,9 +34,12 @@ public class Connessione {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            System.out.println("- - - Elenco Contatti Database- - -");
             while (resultSet.next()){
                 System.out.println(resultSet.getString("nome") + " " + resultSet.getString("cognome") + " " + resultSet.getString("numero") + " " + resultSet.getString("fiscale"));
             }
+
+            System.out.println("- - - Fine Elenco Contatti Database - - -");
 
         }catch (SQLException ex){
             System.out.println(ex);

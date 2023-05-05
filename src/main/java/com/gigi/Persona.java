@@ -82,6 +82,10 @@ public class Persona {
         }
     }*/
 
+    public void toJOptionpane(){
+        JOptionPane.showMessageDialog(null, "Nome: " + getNome()+ "\nCognome: " + getCognome()+ "\nTelefono: " + getTelefono(), "Trovato!", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public void toDatabase(Connection connection){
 
         if (connection == null) return;
@@ -106,5 +110,15 @@ public class Persona {
             System.out.println(ex);
             JOptionPane.showMessageDialog(null, "Errore nell'aggiunta del DataBase", "Errore", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Persona{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", fiscale='" + fiscale + '\'' +
+                '}';
     }
 }

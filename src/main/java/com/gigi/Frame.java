@@ -2,6 +2,7 @@ package com.gigi;
 
 import javax.sound.midi.Soundbank;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -55,7 +56,7 @@ public class Frame extends JFrame {
 
         //Bottoni
         JButton aggiungi = new JButton("Aggiungi contatto");
-        aggiungi.setBounds(250, 400, 300, 50);
+        aggiungi.setBounds(300, 400, 250, 50);
         panel.add(aggiungi);
 
         //ActionLsitener
@@ -80,10 +81,16 @@ public class Frame extends JFrame {
                 Connection connection = Connessione.getConnessione();
                 if (connection == null) return;
 
-                persona.toDatabase(connection);
+                //persona.toDatabase(connection);
+                ConnessioneDAO connessioneDAO = new ConnessioneDAO(Connessione.getConnessione());
+                connessioneDAO.addPersona(persona);
 
+                nome.setText("");
+                codiceFIscale.setText("");
+                telefono.setText("");
+                cognome.setText("");
 
-                //- - - - - - FILE - - - - - -
+                /*- - - - - - FILE - - - - - -
                 File file = new File("Contatti.txt");
                 //Se file non esiste, crealo
                 if (!file.exists()) {
@@ -105,7 +112,7 @@ public class Frame extends JFrame {
                     cognome.setText("");
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
-                }
+                }*/
             }
         });
 
@@ -115,14 +122,23 @@ public class Frame extends JFrame {
         visualizza.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File file = new File("Contatti.txt");
+              /*  File file = new File("Contatti.txt");
+                if (!file.exists()) {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
                 Scanner scanner = null;
                 try {
                     scanner = new Scanner(file);
-                    System.out.println("- - - Elenco Contatti - - -");
+                    System.out.println("- - - Elenco Contatti Foglio- - -");
                     while (scanner.hasNextLine()){
                         System.out.println(scanner.nextLine());
                     }
+
+                    System.out.println("- - - Fine Contatti Foglio- - -");
 
                 }catch (FileNotFoundException ex){
                     ex.printStackTrace();
@@ -131,8 +147,14 @@ public class Frame extends JFrame {
                     scanner.close();
                 }
 
-                Connessione.getAll();
+                Connessione.getAll();*/
+
+                ConnessioneDAO connessioneDAO = new ConnessioneDAO(Connessione.getConnessione());
+
+                System.out.println(connessioneDAO.getAllPersone());
             }
+
+
 
         });
 
@@ -145,10 +167,53 @@ public class Frame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int i = Integer.parseInt(JOptionPane.showInputDialog(null, "Inserisci id"));
-                    Connessione.findById(i);
+                   //Connessione.findById(i);
+                    ConnessioneDAO connessioneDAO = new ConnessioneDAO(Connessione.getConnessione());
+                    connessioneDAO.getPersonaById(i);
                 }catch (NumberFormatException ex){
                     System.out.println(ex);
                     JOptionPane.showMessageDialog(null, "Non puoi inserire caratteri o numero nullo");
+                }
+            }
+        });
+
+        JButton modifica = new JButton("Modifica");
+        modifica.setBounds(10, aggiungi.getY(), visualizza.getBounds().width, visualizza.getBounds().height);
+        panel.add(modifica);
+
+        modifica.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int id = Integer.parseInt(JOptionPane.showInputDialog(null, "Inserisci id della persona da modificare"));
+                    ConnessioneDAO connessioneDAO = new ConnessioneDAO(Connessione.getConnessione());
+                    if (connessioneDAO.getPersonaById(id) == null){
+                        JOptionPane.showMessageDialog(null, "Non esiste nessuna persona che questo ID");
+                        return;
+                    }
+                    connessioneDAO.updatePersona(new Persona(nome.getText(), cognome.getText(), telefono.getText(), codiceFIscale.getText()), id);
+                }catch (NumberFormatException ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        JButton cancella = new JButton("Cancella");
+        cancella.setBounds(modifica.getX(), visualizza.getY(), visualizza.getBounds().width, visualizza.getBounds().height);
+        panel.add(cancella);
+        cancella.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int id = Integer.parseInt(JOptionPane.showInputDialog(null, "Inserisci id della persona da Eliminare"));
+                    ConnessioneDAO connessioneDAO = new ConnessioneDAO(Connessione.getConnessione());
+                    if (connessioneDAO.getPersonaById(id) == null){
+                        JOptionPane.showMessageDialog(null, "Non esiste nessuna persona che questo ID");
+                        return;
+                    }
+                    connessioneDAO.deletePersona(id);
+                }catch (NumberFormatException ex){
+                    ex.printStackTrace();
                 }
             }
         });
